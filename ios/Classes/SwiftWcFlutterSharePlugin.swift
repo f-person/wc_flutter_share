@@ -24,15 +24,14 @@ public class SwiftWcFlutterSharePlugin: NSObject, FlutterPlugin {
 
         let text: String? = argsMap.value(forKey: "text") as? String
         let subject: String? = argsMap.value(forKey: "subject") as? String
-        let fileName: String? = argsMap.value(forKey: "fileName") as? String
+        let filePath: String? = argsMap.value(forKey: "filePath") as? String
 
         var contentToShare: [Any] = []
 
-        if (fileName != nil) {
+        if (filePath != nil) {
             // load the file
-            let docsPath: String = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-            let contentUri = NSURL(fileURLWithPath: docsPath).appendingPathComponent(fileName!)
-            contentToShare.append(contentUri!)
+            let contentUri = NSURL(fileURLWithPath: filePath!)
+            contentToShare.append(contentUri)
         }
 
         if (text != nil) {

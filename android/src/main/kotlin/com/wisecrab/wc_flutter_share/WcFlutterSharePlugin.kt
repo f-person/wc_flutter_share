@@ -47,7 +47,7 @@ class WcFlutterSharePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     val sharePopupTitle = argMap["sharePopupTitle"] as String
     val text = argMap["text"] as String?
     val subject = argMap["subject"] as String?
-    val fileName = argMap["fileName"] as String?
+    val filePath = argMap["filePath"] as String?
     val mimeType = argMap["mimeType"] as String
     val activeContext = context ?: return
 
@@ -60,8 +60,8 @@ class WcFlutterSharePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
 
     val chooser: Intent = Intent.createChooser(shareIntent, sharePopupTitle)
-    if (fileName != null) {
-      val file = File(activeContext.cacheDir, fileName)
+    if (filePath != null) {
+      val file = File(filePath)
       val fileProviderAuthority = activeContext.packageName + PROVIDER_AUTH_EXT
       val contentUri = FileProvider.getUriForFile(activeContext, fileProviderAuthority, file)
       shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)

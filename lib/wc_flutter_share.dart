@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart' as pathProvider;
 
 class WcFlutterShare {
   static const MethodChannel _channel = const MethodChannel('wc_flutter_share');
@@ -13,25 +11,18 @@ class WcFlutterShare {
     @required String sharePopupTitle,
     String text,
     String subject,
-    String fileName,
+    String filePath,
     @required String mimeType,
-    List<int> bytesOfFile,
     IPadConfig iPadConfig,
   }) async {
     assert(sharePopupTitle != null);
     assert(mimeType != null);
 
-    if (fileName != null && bytesOfFile == null) {
-      throw ArgumentError('bytesOfFile is required if fileName is passed');
-    } else if (bytesOfFile != null && fileName == null) {
-      throw ArgumentError('fileName is required if bytesOfFile is passed');
-    }
-
     Map argsMap = <String, dynamic>{
       'sharePopupTitle': sharePopupTitle,
       'text': text,
       'subject': subject,
-      'fileName': fileName,
+      'filePath': filePath,
       'mimeType': mimeType,
       'originX': iPadConfig?.originX ?? 0,
       'originY': iPadConfig?.originY ?? 0,
@@ -39,11 +30,6 @@ class WcFlutterShare {
       'originHeight': iPadConfig?.originHeight ?? 0,
     };
 
-    if (fileName != null && bytesOfFile != null) {
-      final tempDir = await pathProvider.getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/$fileName').create();
-      await file.writeAsBytes(bytesOfFile);
-    }
     _channel.invokeMethod('share', argsMap);
   }
 }
